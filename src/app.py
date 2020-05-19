@@ -1,5 +1,6 @@
 import asyncio
 import random
+from datetime import datetime
 
 import discord
 from discord.ext import tasks
@@ -37,21 +38,28 @@ class SelfClient(discord.AutoShardedClient):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs, fetch_offline_members=False, max_messages=None)
 
-        self.pray_task.start()
+        self.bot_task.start()
 
     async def on_ready(self):
         print(f'Ready to be {self.user}!')
 
-    @tasks.loop(hours=12)
-    async def pray_task(self):
-        channel = self.get_channel(config.CHANNEL_ID)
+    @tasks.loop(hours=1)
+    async def bot_task(self):
+        channel = self.get_channel(347528226970664971)
         prefix = random.choice(PREFIXES)
-        message = f'{prefix}pray'
-        print(f'Sending {message} to {channel}...')
-        await channel.send(message)
 
-    @pray_task.before_loop
-    async def before_loop(self):
+        bet = random.randint(5, 25)
+        gamble_message = f'{prefix}gamble {bet}'
+        print(f'Sending {gamble_message} to {channel}...')
+        await channel.send(gamble_message)
+
+        if (datetime.utcnow().hour == 4):
+            pray_message = f'{prefix}pray'
+            print(f'Sending {pray_message} to {channel}...')
+            await channel.send(pray_message)
+
+    @bot_task.before_loop
+    async def bot_task_before_loop(self):
         print('Waiting for client to be ready...')
         await self.wait_until_ready()
 
