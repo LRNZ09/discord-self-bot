@@ -43,20 +43,25 @@ class SelfClient(discord.AutoShardedClient):
     async def on_ready(self):
         print(f'Ready to be {self.user}!')
 
-    @tasks.loop(hours=1)
-    async def bot_task(self):
+    async def send_command(self, command):
         channel = self.get_channel(347528226970664971)
         prefix = random.choice(PREFIXES)
+        message = f'{prefix}{command}'
 
-        bet = random.randint(5, 25)
-        gamble_message = f'{prefix}gamble {bet}'
-        print(f'Sending {gamble_message} to {channel}...')
-        await channel.send(gamble_message)
+        print(f'Sending {message} to {channel}...')
 
-        if (datetime.utcnow().hour == 4):
-            pray_message = f'{prefix}pray'
-            print(f'Sending {pray_message} to {channel}...')
-            await channel.send(pray_message)
+        await channel.send(message)
+
+    @tasks.loop(hours=1)
+    async def bot_task(self):
+        hour = datetime.utcnow().hour
+
+        # if (hour == 1):
+        #     await self.send_command('pray')
+
+        if (hour % 2):
+            bet = random.randint(1, 20)
+            await self.send_command(f'gamble {bet}')
 
     @bot_task.before_loop
     async def bot_task_before_loop(self):
