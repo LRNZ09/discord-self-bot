@@ -56,8 +56,8 @@ class SelfClient(discord.AutoShardedClient):
     async def bot_task(self):
         hour = datetime.utcnow().hour
 
-        # if (hour == 1):
-        #     await self.send_command('pray')
+        if (hour == 0):
+            await self.send_command('pray')
 
         if (hour % 2):
             bet = random.randint(1, 20)
