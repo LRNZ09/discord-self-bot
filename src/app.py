@@ -7,33 +7,6 @@ from discord.ext import tasks
 
 from . import config
 
-PREFIXES = [
-    "¿",
-    "‽",
-    "[prefix goes here]",
-    "*notices bot*",
-    "*slaps roof of hitomi*",
-    "👁",
-    "431495393520386068!",
-    "8!",
-    "according to all known laws of discord, there is no way a bot should be able to ",
-    "askjasdljhsdfjkhasdlasdjkajs"
-    "erisa!",
-    "heh... ",
-    "hey bot ",
-    "hi!!!!!!!!!",
-    "hi!",
-    "hi?",
-    "hi1",
-    "hitomi please",
-    "hitomi, do a ",
-    "hitomi!",
-    "ñ!",
-    "undefined",
-    "wach!",
-]
-
-
 class SelfClient(discord.AutoShardedClient):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs, fetch_offline_members=False, max_messages=None)
@@ -45,8 +18,7 @@ class SelfClient(discord.AutoShardedClient):
 
     async def send_command(self, command):
         channel = self.get_channel(347528226970664971)
-        prefix = random.choice(PREFIXES)
-        message = f'{prefix}{command}'
+        message = f'!{command}'
 
         print(f'Sending {message} to {channel}...')
 
@@ -56,12 +28,13 @@ class SelfClient(discord.AutoShardedClient):
     async def bot_task(self):
         hour = datetime.utcnow().hour
 
-        if (hour == 0):
-            await self.send_command('pray')
+        if (hour % 6) == 0:
+            await self.send_command('payday')
 
-        if (hour % 2):
-            bet = random.randint(1, 20)
-            await self.send_command(f'gamble {bet}')
+        if (hour % 2) == 1:
+            bet = random.randint(5, 50)
+            choice = random.choice(['heads', 'tails'])
+            await self.send_command(f'coin {bet} {choice}')
 
     @bot_task.before_loop
     async def bot_task_before_loop(self):
