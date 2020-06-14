@@ -24,17 +24,13 @@ class SelfClient(discord.AutoShardedClient):
 
         await channel.send(message)
 
-    @tasks.loop(hours=1)
+    @tasks.loop(minutes=60 * 6 + 1)
     async def bot_task(self):
-        hour = datetime.utcnow().hour
+        await self.send_command('payday')
 
-        if (hour % 6) == 0:
-            await self.send_command('payday')
-
-        if (hour % 2) == 1:
-            bet = random.randint(5, 50)
-            choice = random.choice(['heads', 'tails'])
-            await self.send_command(f'coin {bet} {choice}')
+        # bet = random.randint(10, 50)
+        # choice = random.choice(['heads', 'tails'])
+        # await self.send_command(f'coin {bet} {choice}')
 
     @bot_task.before_loop
     async def bot_task_before_loop(self):
