@@ -7,9 +7,11 @@ from discord.ext import tasks
 
 from . import config
 
-class SelfClient(discord.AutoShardedClient):
+
+class SelfClient(discord.Client):
     def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs, fetch_offline_members=False, max_messages=None)
+        super().__init__(*args, **kwargs, fetch_offline_members=False,
+                         guild_subscriptions=False, max_messages=None)
 
         self.bot_task.start()
 
